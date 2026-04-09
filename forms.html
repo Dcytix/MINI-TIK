@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Registration</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: #111;
+            padding: 30px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid #333;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        h2 { text-align: center; margin-bottom: 25px; letter-spacing: 2px; }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: #aaa; }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input:focus { border-color: #00d4ff; }
+
+        .plan-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .plan-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: 0.3s;
+            opacity: 0.4;
+        }
+
+        .plan-btn.active { opacity: 1; transform: scale(1.02); outline: 2px solid white; box-shadow: 0 0 15px currentColor; }
+
+        .vip { background: linear-gradient(45deg, #000, #ffcc00); color: #fff; }
+        .ultimate { background: linear-gradient(45deg, #000, #fff); color: #000; }
+        .ronaldo { background: linear-gradient(45deg, #ff0000, #008000); color: #fff; }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            background: #00d4ff;
+            border: none;
+            color: black;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover { background: #00b0d4; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>MEMBERSHIP FORM</h2>
+    <form id="membershipForm">
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" id="username" placeholder="Your in-game name" required>
+        </div>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="Email for verification" required>
+        </div>
+
+        <div class="input-group">
+            <label>Theme Choice</label>
+            <select id="theme">
+                <option value="default">Default</option>
+                <option value="glitch">Glitch</option>
+                <option value="pastel">Pastel</option>
+                <option value="jew">Jew</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Subscription Plan</label>
+            <div class="plan-grid">
+                <div class="plan-btn vip" onclick="setPlan('VIP', 2, 2, this)">VIP (2x Luck & Money)</div>
+                <div class="plan-btn ultimate" onclick="setPlan('Ultimate', 5, 5, this)">Ultimate (5x Luck & Money)</div>
+                <div class="plan-btn ronaldo" onclick="setPlan('RONALDO', 10, 10, this)">RONALDO 🐐 (10x Luck & Money)</div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Payment Method</label>
+            <select id="paymentMethod">
+                <option value="QRIS">QRIS</option>
+                <option value="E-Wallet">E-Wallet</option>
+                <option value="Pulsa">Pulsa</option>
+                <option value="Bank">Bank Transfer</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Transaction Number</label>
+            <input type="text" id="transNumber" placeholder="Enter transaction ID..." required>
+        </div>
+
+        <button type="submit" class="submit-btn">REGISTER & CLAIM REWARD</button>
+    </form>
+</div>
+
+<script>
+    let selectedPlan = { name: 'Free', luck: 1, money: 1 };
+
+    function setPlan(name, luck, money, el) {
+        selectedPlan = { name, luck, money };
+        document.querySelectorAll('.plan-btn').forEach(btn => btn.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    document.getElementById('membershipForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if(selectedPlan.name === 'Free') {
+            alert("Please select a Membership Plan!");
+            return;
+        }
+
+        const userData = {
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            theme: document.getElementById('theme').value,
+            plan: selectedPlan.name,
+            luckBoost: selectedPlan.luck,
+            moneyBoost: selectedPlan.money,
+            payment: document.getElementById('paymentMethod').value,
+            isMember: true
+        };
+
+        localStorage.setItem('cardGameUser', JSON.stringify(userData));
+
+        alert("Membership Registered Successfully! The game will now apply your boosts.");
+
+        if (window.self !== window.top) {
+            window.parent.location.reload(); 
+        } else {
+            window.location.href = 'main.html'; 
+        }
+    });
+</script>
+
+</body>
+</html>
